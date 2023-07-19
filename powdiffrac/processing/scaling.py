@@ -1,8 +1,9 @@
 import numpy as np
+import numpy.typing as npt
 
 
 def scale_min_max(
-    ndarray: np.typing.ArrayLike,
+    ndarray: npt.ArrayLike,
     *,
     output_max: bool = False,
 ) -> np.ndarray:
