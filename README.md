@@ -1,7 +1,7 @@
 ![Supported Versions](https://img.shields.io/badge/Python-3.8_|_3.9_|_3.10-blue)
 ![pytest status](https://github.com/jschuetzke/python-powder-diffraction/actions/workflows/python-package.yml/badge.svg)
 ![Version](https://img.shields.io/badge/Version-1.0.1-blue)
-![License](https://img.shields.io/github/license/jschuetzke/python-powder-diffraction?color=blue)
+![License](https://img.shields.io/github/license/jschuetzke/python-powder-diffraction)
 
 # Python Powder Diffraction Simulation Tools
 
