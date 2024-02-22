@@ -1,3 +1,8 @@
+![Supported Versions](https://img.shields.io/badge/Python-3.8_|_3.9_|_3.10-blue)
+![pytest status](https://github.com/jschuetzke/python-powder-diffraction/actions/workflows/python-package.yml/badge.svg)
+![Version](https://img.shields.io/badge/Version-1.0.1-blue)
+![License](https://img.shields.io/github/license/jschuetzke/python-powder-diffraction?color=blue)
+
 # Python Powder Diffraction Simulation Tools
 
 Comprehensive Python package to generate powder diffraction patterns from cif files. The package builds on [ _pymatgen_](https://pymatgen.org/) and adds functionality to similate powder patterns with a defined 2θ range and step size. While pymatgen calculates theoretical peak positions and relative intensities for a given wavelength and structure, this package provides peak shape, noise and background simulation.
