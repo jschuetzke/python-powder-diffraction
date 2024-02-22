@@ -115,14 +115,18 @@ def generate_noise(
     # next we shift the noise from -1 and 1 to 0 and 1
     gaus = (gaus * 0.5) + 0.5
 
+    # same for Poisson noise
+    if poisson:
+        pois = 1 / 3 * np.clip(rng.normal(0, 1, scans.shape), -3, 3)
+        pois = (pois * 0.5) + 0.5
+
     # scale noise according to max intensity
     if type(noise_lvl) == str or noise_lvl is None:  # assume some form of random
         noise_lvl = rng.uniform(noise_min, noise_max, scans.shape[0])
     gaus = gaus * (noise_lvl * np.max(scans, axis=1))[:, None]
     noisy_scan = np.add(scans, gaus)
+    
     if poisson:
-        pois = 1 / 3 * np.clip(rng.normal(0, 1, scans.shape), -3, 3)
-        pois = (pois * 0.5) + 0.5
         pois = np.sqrt(scans) * noise_lvl[:, None] * pois
         noisy_scan += pois
 
