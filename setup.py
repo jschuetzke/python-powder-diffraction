@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 # Install dependencies
 setup(
     name="powder-diffraction",
-    version="1.0.0",
+    version="1.0.1",
     author="Jan Schuetzke, Nathan J. Szymanski",
     author_email="jan.schuetzke@kit.edu; nathan_szymanski@berkeley.edu",
     description="A package for the generation of synthetic powder diffraction scans from pymatgen Structures",
