@@ -12,6 +12,7 @@ def generate_noise(
     noise_lvl=None,
     noise_min=0.005,
     noise_max=0.015,
+    poisson=True,
 ):
     """
     function to simulate noise for a given (batch of) simulated xrd signal(s)
@@ -41,8 +42,8 @@ def generate_noise(
     noise_max : float, optional
         Maximum amplitude of noise in relation to maximum intensity in signal
         if drawn randomly. The default is .015.
-    correlation : bool, optional
-        correlate amplitude of noise with intensity values. The default is False.
+    poisson : bool, optional
+        Include Poisson noise that is dependent on signal intensity. The default is True.
 
     Returns
     -------
@@ -111,20 +112,21 @@ def generate_noise(
     # we want to avoid extreme outliers so we clip the noise
     # with 1/3 and -3/+3 we achieve a nice normal distribution for values -1 to 1
     gaus = 1 / 3 * np.clip(rng.normal(0, 1, scans.shape), -3, 3)
-    pois = 1 / 3 * np.clip(rng.normal(0, 1, scans.shape), -3, 3)
     # next we shift the noise from -1 and 1 to 0 and 1
     gaus = (gaus * 0.5) + 0.5
-    pois = (pois * 0.5) + 0.5
 
     # scale noise according to max intensity
     if type(noise_lvl) == str or noise_lvl is None:  # assume some form of random
         noise_lvl = rng.uniform(noise_min, noise_max, scans.shape[0])
     gaus = gaus * (noise_lvl * np.max(scans, axis=1))[:, None]
-    pois = np.sqrt(scans) * noise_lvl[:, None] * pois
-
-    # combining everything together
     noisy_scan = np.add(scans, gaus)
-    noisy_scan += pois
+    if poisson:
+        pois = 1 / 3 * np.clip(rng.normal(0, 1, scans.shape), -3, 3)
+        pois = (pois * 0.5) + 0.5
+        pois = np.sqrt(scans) * noise_lvl[:, None] * pois
+        noisy_scan += pois
+
+    # add background
     noisy_scan += bkg
     if dim == 1:
         noisy_scan = noisy_scan[0, :]
