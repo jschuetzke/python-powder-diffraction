@@ -9,7 +9,7 @@ setup(
     description="A package for the generation of synthetic powder diffraction scans from pymatgen Structures",
     url="https://github.com/jschuetzke/python-powder-diffraction",
     packages=find_packages(),
-    python_requires=">=3.7",
+    python_requires=">=3.9",
     scripts=["scripts/generate_training_data.py"],
     license="MIT",
     classifiers=[
