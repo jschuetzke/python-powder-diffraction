@@ -9,6 +9,7 @@ def test_noise():
         twotheta_min=10,
         twotheta_max=80,
         seed=2023,
+        air_scattering="random",
         noise_min=0.03,
         noise_max=0.07,
     )

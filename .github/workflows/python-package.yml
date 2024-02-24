@@ -5,7 +5,9 @@ name: Test Code
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - dev
   pull_request:
     branches: [ "main" ]
 
