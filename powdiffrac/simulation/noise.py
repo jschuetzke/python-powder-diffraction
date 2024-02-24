@@ -7,7 +7,7 @@ def generate_noise(
     twotheta_min=10.0,
     twotheta_max=80.0,
     seed=None,
-    airscatt_val=None,
+    air_scattering="skip",
     cheb=None,
     noise_lvl=None,
     noise_min=0.005,
@@ -29,8 +29,9 @@ def generate_noise(
         End 2Theta angle of scan. The default is 80.0.
     seed : int, optional
         input random seed for debugging purposes. The default is None.
-    airscatt_val : float, optional
-        One over x value for air scattering. The default is None.
+    airscatt_val : string, optional
+        One over x value for air scattering. "random" to include airscattering.
+        The default is "skip".
     cheb : numpy.polynomial.chebyshev.Chebyshev instance, optional
         Chebyshev polynomial as background. The default is None.
     noise_lvl : float, optional
@@ -74,15 +75,17 @@ def generate_noise(
     # air scattering part
     steps = np.linspace(twotheta_min, twotheta_max, datapoints)
 
-    # observation: air scattering begins between 0.02 and 0.035 of scan max
-    airscatt_min = 0.1
-    airscatt_max = 1.5
+    if air_scattering == "random":
+        # observation: air scattering begins between 0.02 and 0.035 of scan max
+        airscatt_min = 0.1
+        airscatt_max = 1.5
 
-    if airscatt_val is None:
         airscatt_val = rng.uniform(
             airscatt_min, airscatt_max, (scans.shape[0])
         ) * np.max(scans, axis=1)
-    onx = airscatt_val[:, None] / (steps)
+        onx = airscatt_val[:, None] / (steps)
+    else:
+        onx = np.zeros_like(scans)
 
     # background function using a chebyshev polynomial
     coefMin = -0.1
