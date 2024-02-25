@@ -1,3 +1,4 @@
+#! python
 import os
 import argparse
 import ast
@@ -70,7 +71,8 @@ def simulate_signals(
                 total=len(files),
             ):
                 x[result[1]] = result[0]
-        np.save(os.path.join(directory, f"x_{name}.npy"), x)
+        n_total = len(files) * n
+        np.save(os.path.join(directory, f"x_{name}.npy"), x.reshape([n_total, datapoints]))
         np.save(os.path.join(directory, f"y_{name}.npy"), y)
         # overwrite to unlock space
         x = None
