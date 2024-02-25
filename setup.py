@@ -10,7 +10,10 @@ setup(
     url="https://github.com/jschuetzke/python-powder-diffraction",
     packages=find_packages(),
     python_requires=">=3.9",
-    scripts=["scripts/generate-varied-patterns"],
+    scripts=[
+        "scripts/generate-varied-patterns",
+        "scripts/add-noise"
+    ],
     license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",
