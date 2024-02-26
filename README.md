@@ -70,4 +70,4 @@ The object contains the variations (strain, texture etc.) as properties, which a
 
 ## Generation of large-scale data set
 
-An example to generate a data set to train a neural network for the classification (identification) of powder diffraction signals is given in [`generate_training_data.py`](https://github.com/jschuetzke/python-powder-diffraction/scripts/generate_training_data.py). Copy, modify and execute your version of this script so that it fits your use-case.
+An example to generate a data set to train a neural network for the classification (identification) of powder diffraction signals is given in [`generate-varied-patterns`](https://github.com/jschuetzke/python-powder-diffraction/blob/main/scripts/generate-varied-patterns). Copy, modify and execute your version of this script so that it fits your use-case.
