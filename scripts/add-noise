@@ -1,0 +1,109 @@
+#! python
+import os
+import argparse
+import numpy as np
+from powdiffrac.simulation import generate_noise
+
+def add_noise_to_spectra(
+    spectra: np.ndarray,
+    noise_min: float = 0.02,
+    noise_max: float = 0.05,
+    background_max: float = 0.1,
+    include_poisson: bool = False,
+    constant_level = None
+):
+    if not constant_level:
+        noisy_spectra = generate_noise(
+            spectra,
+            noise_min=noise_min,
+            noise_max=noise_max,
+            background_ratio=background_max,
+            poisson=include_poisson
+        )
+    else:
+        noisy_spectra = generate_noise(
+            spectra,
+            noise_lvl = constant_level,
+            background_ratio=background_max,
+            poisson=include_poisson
+        )
+    return noisy_spectra
+
+def main(args):
+
+    if args.template is None:
+        output_file = os.path.splitext(args.input_file)[0] + '_noise.npy'
+        data = np.load(args.input_file)
+        noisy = add_noise_to_spectra(
+            data,
+            noise_min=args.noise_min,
+            noise_max=args.noise_max,
+            constant_level=args.noise_level,
+            background_max=args.background_ratio,
+            include_poisson=args.poisson
+        )
+        np.save(output_file, noisy)
+    else:
+        if '/' in args.template:
+            print("Can only be executed for files in current dir.")
+            exit()
+        for file in os.listdir('.'):
+            if file.startswith(args.template):
+                # skip files that already contain noise
+                if file.endswith("_noise.npy"):
+                    continue
+                output_file = os.path.splitext(file)[0] + '_noise.npy'
+                data = np.load(file)
+                noisy = add_noise_to_spectra(
+                    data,
+                    noise_min=args.noise_min,
+                    noise_max=args.noise_max,
+                    constant_level=args.noise_level,
+                    include_poisson=args.poisson
+                )
+                np.save(output_file, noisy)
+                data = None
+                noisy = None
+    return
+
+def check_args(input_file, template):
+    if input_file is None and template is None:
+        print("Please provide either an input file or a template.")
+        exit()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="add noise to xrd signals")
+    parser.add_argument("input_file", nargs="?", help="Path to the input numpy file.")
+    parser.add_argument("--template", help="String template to match files for noise addition.")
+
+    parser.add_argument(
+        "--noise_min",
+        type=float,
+        default=0.02,
+        help="Minimum noise (regarding max intensity in scan); default: 0.02",
+    )
+    parser.add_argument(
+        "--noise_max",
+        type=float,
+        default=0.05,
+        help="Maximum noise (regarding max intensity in scan); default: 0.05",
+    )
+    parser.add_argument(
+        "--noise_level", 
+        type=float, 
+        help="constant, defined SNR"
+    )
+    parser.add_argument(
+        "--background_ratio", 
+        type=float, 
+        help="Maximum background (regarding max intensity in scan); default: 0.1"
+    )
+    parser.add_argument(
+        "--include_poisson",
+        action="store_true",
+        dest="poisson",
+        help="adds Poisson noise (one-shot noise)",
+    )
+    args = parser.parse_args()
+    check_args(args.input_file, args.template)
+    main(args)

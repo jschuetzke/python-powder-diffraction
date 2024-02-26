@@ -8,7 +8,7 @@ def generate_noise(
     twotheta_max=80.0,
     seed=None,
     air_scattering="skip",
-    cheb=None,
+    background_ratio=0.1,
     noise_lvl=None,
     noise_min=0.005,
     noise_max=0.015,
@@ -32,8 +32,9 @@ def generate_noise(
     airscatt_val : string, optional
         One over x value for air scattering. "random" to include airscattering.
         The default is "skip".
-    cheb : numpy.polynomial.chebyshev.Chebyshev instance, optional
-        Chebyshev polynomial as background. The default is None.
+    background_ratio : float, optional
+        Amplitude of background in relation to maximum intensity in signal.
+        The default is 0.1 (max 10% of highest intensity).
     noise_lvl : float, optional
         Amplitude of noise in relation to maximum intensity in signal.
         The default is None (randomized).
@@ -88,19 +89,17 @@ def generate_noise(
         onx = np.zeros_like(scans)
 
     # background function using a chebyshev polynomial
-    coefMin = -0.1
-    coefMax = 0.1
-    if cheb == 0:
-        cheb = np.zeros_like(onx)
-    elif np.isscalar(cheb):  # constant background for all scans
-        cheb = np.ones_like(onx) * cheb
-    elif cheb is None:
-        # ccoefs[:,0] = np.sum(ccoefs, axis=1)
+        
+    if (background_ratio == 0) or (background_ratio is None):
+        cheb = np.zeros_like(scans)
+    else:
+        coef_max = background_ratio
+        coef_min = -background_ratio
         cheb = np.zeros_like(scans)
         for i in range(cheb.shape[0]):
             polynom_order = rng.integers(2, 5)
             ccoefs = rng.uniform(
-                coefMin / polynom_order, coefMax / polynom_order, (polynom_order)
+                coef_min / polynom_order, coef_max / polynom_order, (polynom_order)
             )
             c = np.polynomial.chebyshev.Chebyshev(ccoefs)
             cheb[i, :] = c.linspace(datapoints)[1]
