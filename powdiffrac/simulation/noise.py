@@ -125,7 +125,7 @@ def generate_noise(
     # scale noise according to max intensity
     if type(noise_lvl) is str or noise_lvl is None:  # assume some form of random
         noise_lvl = rng.uniform(noise_min, noise_max, scans.shape[0])
-    elif type(noise_lvl) is int:
+    elif type(noise_lvl) is float:
         noise_lvl = np.repeat(np.array([noise_lvl]), scans.shape[0], axis=0) 
     gaus = gaus * (noise_lvl * np.max(scans, axis=1))[:, None]
     noisy_scan = np.add(scans, gaus)
