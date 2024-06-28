@@ -19,5 +19,5 @@ setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    install_requires=["numpy", "scipy", "pymatgen", "tqdm"],
+    install_requires=["numpy<2", "scipy", "pymatgen", "tqdm"],
 )
